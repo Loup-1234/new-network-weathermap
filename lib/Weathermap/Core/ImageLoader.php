@@ -38,6 +38,10 @@ class ImageLoader
      */
     public function imagecreatescaledcolourizedfromfile($filename, $scaleWidth, $scaleHeight, $colour, $colourMethod)
     {
+        if (!function_exists('imagetypes')) {
+            return null;
+        }
+
         MapUtility::debug("Getting a (maybe cached) scaled coloured image for $filename at $scaleWidth x $scaleHeight with $colour\n");
 
         $key = sprintf('%s:%d:%d:%s:%s', $filename, $scaleWidth, $scaleHeight, $colour->asString(), $colourMethod);
@@ -46,7 +50,7 @@ class ImageLoader
         if (array_key_exists($key, $this->cache)) {
             MapUtility::debug("Cache hit for $key\n");
             $iconImageRef = $this->cache[$key];
-            MapUtility::debug("From cache: $iconImageRef\n");
+            MapUtility::debug("From cache: [image]\n");
             $finalImageRef = $this->imageduplicate($iconImageRef);
         } else {
             MapUtility::debug("Cache miss - processing\n");
@@ -60,7 +64,7 @@ class ImageLoader
             $finalImageRef = $this->updateCache($scaleWidth, $scaleHeight, $key, $iconImageRef);
         }
 
-        MapUtility::debug("Returning $finalImageRef\n");
+        MapUtility::debug("Returning [image]\n");
         return $finalImageRef;
     }
 
@@ -72,6 +76,10 @@ class ImageLoader
      */
     public function imagecreatescaledfromfile($filename, $scaleWidth, $scaleHeight)
     {
+        if (!function_exists('imagetypes') || !file_exists($filename) || !is_readable($filename)) {
+            return null;
+        }
+
         list($width, $height) = getimagesize($filename);
 
         MapUtility::debug("Getting a (maybe cached) image for $filename at $scaleWidth x $scaleHeight\n");
@@ -91,7 +99,7 @@ class ImageLoader
         if (array_key_exists($key, $this->cache)) {
             MapUtility::debug("Cache hit for $key\n");
             $iconImageRef = $this->cache[$key];
-            MapUtility::debug("From cache: $iconImageRef\n");
+            MapUtility::debug("From cache: [image]\n");
             $finalImageRef = $this->imageduplicate($iconImageRef);
         } else {
             MapUtility::debug("Cache miss - processing\n");
@@ -102,12 +110,16 @@ class ImageLoader
             $finalImageRef = $this->updateCache($scaleWidth, $scaleHeight, $key, $iconImageRef);
         }
 
-        MapUtility::debug("Returning $finalImageRef\n");
+        MapUtility::debug("Returning [image]\n");
         return $finalImageRef;
     }
 
     public function imageduplicate($sourceImageRef)
     {
+        if (!function_exists('imagesx') || !$sourceImageRef) {
+            return null;
+        }
+
         $sourceWidth = imagesx($sourceImageRef);
         $sourceHeight = imagesy($sourceImageRef);
 
@@ -140,6 +152,10 @@ class ImageLoader
      */
     public function imagecreatefromfile($filename)
     {
+        if (!function_exists('imagetypes')) {
+            return null;
+        }
+
         $resultImage = null;
         $newImage = null;
 
@@ -150,9 +166,9 @@ class ImageLoader
             if (array_key_exists($key, $this->cache)) {
                 MapUtility::debug("Cache hit! for $key\n");
                 $cacheImage = $this->cache[$key];
-                MapUtility::debug("From cache: $cacheImage\n");
+                MapUtility::debug("From cache: [image]\n");
                 $newImage = $this->imageduplicate($cacheImage);
-                MapUtility::debug("$newImage\n");
+                MapUtility::debug("[image]\n");
             } else {
                 MapUtility::debug("Cache miss - processing\n");
 
@@ -190,7 +206,7 @@ class ImageLoader
                 }
             }
             if (!is_null($newImage) && $this->isCacheable($width, $height)) {
-                MapUtility::debug("Caching $key $newImage\n");
+                MapUtility::debug("Caching $key [image]\n");
                 $this->cache[$key] = $newImage;
                 $resultImage = $this->imageduplicate($newImage);
             } else {
@@ -200,7 +216,7 @@ class ImageLoader
             MapUtility::warn("Image file $filename is unreadable. Check permissions. [WMIMG05]\n");
         }
 
-        MapUtility::debug("Returning $resultImage\n");
+        MapUtility::debug("Returning [image]\n");
         return $resultImage;
     }
 
@@ -212,6 +228,10 @@ class ImageLoader
      */
     private function scaleImage($scaleWidth, $scaleHeight, $iconImageRef)
     {
+        if (!function_exists('imagesx') || !$iconImageRef) {
+            return $iconImageRef;
+        }
+
         $iconWidth = imagesx($iconImageRef);
         $iconHeight = imagesy($iconImageRef);
 
@@ -250,7 +270,7 @@ class ImageLoader
     private function updateCache($scaleWidth, $scaleHeight, $key, $iconImageRef)
     {
         if ($this->isCacheable($scaleWidth, $scaleHeight)) {
-            MapUtility::debug("Caching [$key]=$iconImageRef\n");
+            MapUtility::debug("Caching [$key]=[image]\n");
             $this->cache[$key] = $iconImageRef;
             $finalImageRef = $this->imageduplicate($iconImageRef);
             return $finalImageRef;
@@ -267,8 +287,12 @@ class ImageLoader
      */
     private function colourizeImage($colour, $colourMethod, $iconImageRef)
     {
+        if (!$iconImageRef) {
+            return;
+        }
+
         MapUtility::debug("$colourMethod\n");
-        if ($colourMethod == 'imagefilter') {
+        if ($colourMethod == 'imagefilter' && function_exists('imagefilter')) {
             MapUtility::debug("Colorizing (imagefilter)...\n");
             list ($red, $green, $blue) = $colour->getComponents();
             imagefilter($iconImageRef, IMG_FILTER_COLORIZE, $red, $green, $blue);

@@ -64,8 +64,8 @@ function weathermap_poller_output($rrdUpdateArray)
             );
         }
 
-        if (isset($rrdUpdateArray[$file]) && is_array($rrdUpdateArray[$file]) && isset($rrdUpdateArray[$file]['times']) && is_array($rrdUpdateArray[$file]['times']) && isset($rrdUpdateArray{$file}['times'][key($rrdUpdateArray[$file]['times'])]{$dsname})) {
-            $value = $rrdUpdateArray{$file}['times'][key($rrdUpdateArray[$file]['times'])]{$dsname};
+        if (isset($rrdUpdateArray[$file]) && is_array($rrdUpdateArray[$file]) && isset($rrdUpdateArray[$file]['times']) && is_array($rrdUpdateArray[$file]['times']) && isset($rrdUpdateArray[$file]['times'][key($rrdUpdateArray[$file]['times'])]{$dsname})) {
+            $value = $rrdUpdateArray[$file]['times'][key($rrdUpdateArray[$file]['times'])]{$dsname};
             $time = key($rrdUpdateArray[$file]['times']);
             if ($logVerbosity >= POLLER_VERBOSITY_MEDIUM) {
                 \cacti_log("WM poller_output: Got one! $file:$dsname -> $time $value\n", true, "WEATHERMAP");

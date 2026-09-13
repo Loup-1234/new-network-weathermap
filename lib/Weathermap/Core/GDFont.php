@@ -28,7 +28,10 @@ class GDFont extends Font
 
     public function drawImageString($gdImage, $x, $y, $string, $colour, $angle = 0)
     {
-        imagestring($gdImage, $this->gdnumber, $x, $y - imagefontheight($this->gdnumber), $string, $colour);
+        $fontHeight = function_exists('imagefontheight') ? imagefontheight($this->gdnumber) : 12;
+        if (function_exists('imagestring')) {
+            imagestring($gdImage, $this->gdnumber, (int)$x, (int)($y - $fontHeight), $string, $colour);
+        }
         if ($angle != 0) {
             MapUtility::warn("Angled text doesn't work with non-FreeType fonts [WMWARN02]\n");
         }
@@ -48,7 +51,10 @@ class GDFont extends Font
         $lineCount = count($lines);
         $maxLineLength = $this->calculateMaxLineLength($lines);
 
-        return array(imagefontwidth($this->gdnumber) * $maxLineLength, $lineCount * imagefontheight($this->gdnumber));
+        $fontWidth = function_exists('imagefontwidth') ? imagefontwidth($this->gdnumber) : 7;
+        $fontHeight = function_exists('imagefontheight') ? imagefontheight($this->gdnumber) : 12;
+
+        return array($fontWidth * $maxLineLength, $lineCount * $fontHeight);
     }
 
     private function initGDBuiltin($gdNumber)
@@ -65,14 +71,16 @@ class GDFont extends Font
      */
     private function initGD($filename)
     {
-        $gdFontID = imageloadfont($filename);
+        if (function_exists('imageloadfont')) {
+            $gdFontID = imageloadfont($filename);
 
-        if ($gdFontID) {
-            $this->gdnumber = $gdFontID;
-            $this->file = $filename;
-            $this->type = 'gd';
+            if ($gdFontID) {
+                $this->gdnumber = $gdFontID;
+                $this->file = $filename;
+                $this->type = 'gd';
 
-            return true;
+                return true;
+            }
         }
         return false;
     }

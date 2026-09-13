@@ -294,7 +294,7 @@ class MapNode extends MapDataItem
                 $iconImageRef = $this->drawRealIcon($map, $iconColour);
             }
 
-            if ($iconImageRef) {
+            if ($iconImageRef && function_exists("imagesx")) {
                 $iconWidth = imagesx($iconImageRef);
                 $iconHeight = imagesy($iconImageRef);
 
@@ -347,7 +347,7 @@ class MapNode extends MapDataItem
         $iconBox->translate(-$totalBoundingBox->topLeft->x, -$totalBoundingBox->topLeft->y);
 
         // Draw the icon, if any
-        if (isset($iconImageRef)) {
+        if (isset($iconImageRef) && $nodeImageRef && function_exists("imagecopy")) {
             imagecopy(
                 $nodeImageRef,
                 $iconImageRef,
@@ -358,14 +358,16 @@ class MapNode extends MapDataItem
                 imagesx($iconImageRef),
                 imagesy($iconImageRef)
             );
-            imagedestroy($iconImageRef);
+            if (function_exists("imagedestroy")) imagedestroy($iconImageRef);
         }
 
         // Draw the label, if any
         if ($this->label != '') {
             $textPoint->translate(-$totalBoundingBox->topLeft->x, -$totalBoundingBox->topLeft->y);
-            imagealphablending($nodeImageRef, true);
-            $this->drawLabel($map, $textPoint, $labelColour, $nodeImageRef, $labelBox);
+            if ($nodeImageRef && function_exists("imagealphablending")) {
+                imagealphablending($nodeImageRef, true);
+                $this->drawLabel($map, $textPoint, $labelColour, $nodeImageRef, $labelBox);
+            }
         }
 
         $this->centreX = $this->x - $totalBoundingBox->topLeft->x;
@@ -758,6 +760,7 @@ class MapNode extends MapDataItem
         // this is an artificial icon - we don't load a file for it
 
         $iconImageRef = ImageUtility::createTransparentImage($this->iconscalew, $this->iconscaleh);
+        if (!$iconImageRef) return null;
 
         list($finalFillColour, $finalInkColour) = $this->calculateAICONColours($labelColour, $map);
 

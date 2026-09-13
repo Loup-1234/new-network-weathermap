@@ -59,7 +59,7 @@ class RRDTool extends Base
             $this->rrdUsePollerOutput = false;
         }
 
-        if (file_exists($map->rrdtool)) {
+        if (!empty($map->rrdtool) && file_exists($map->rrdtool)) {
             if ((function_exists('is_executable')) && (!is_executable($map->rrdtool))) {
                 MapUtility::warn("RRD DS: RRDTool exists but is not executable? [WMRRD01]\n");
                 return false;

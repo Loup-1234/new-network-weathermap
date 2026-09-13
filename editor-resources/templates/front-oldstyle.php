@@ -14,6 +14,9 @@
         browsers if it was seen to be worthwhile (I would take a bit of convincing, because I don't see a benefit,
         personally).</div>
 <div id="withjs">
+    <div style="text-align: center; margin: 15px auto;">
+        <button type="button" onclick="if (window.parent && window.parent !== window) { window.parent.postMessage({ type: 'CLOSE_LEGACY' }, '*'); } else { window.location.href = '/'; }" style="padding: 8px 18px; font-size: 13px; font-weight: bold; background: #f59e0b; color: #0c0a09; border: 1px solid #d97706; border-radius: 8px; cursor: pointer; box-shadow: 0 2px 4px rgba(0,0,0,0.3);">&larr; Retour à la nouvelle interface</button>
+    </div>
     <div id="dlgStart" class="dlgProperties">
         <div class="dlgTitlebar">Welcome</div>
         <div class="dlgBody">Welcome to the PHP Weathermap <?php echo WEATHERMAP_VERSION; ?> editor.<p>

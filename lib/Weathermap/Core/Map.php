@@ -635,12 +635,12 @@ class Map extends MapBase
 
         switch ($which) {
             case 'MIN':
-                $stamp = strftime($this->minstamptext, $this->minimumDataTime);
+                $stamp = @strftime($this->minstamptext, $this->minimumDataTime);
                 $posX = $this->mintimex;
                 $posY = $this->mintimey;
                 break;
             case 'MAX':
-                $stamp = strftime($this->maxstamptext, $this->maximumDataTime);
+                $stamp = @strftime($this->maxstamptext, $this->maximumDataTime);
                 $posX = $this->maxtimex;
                 $posY = $this->maxtimey;
                 break;
@@ -679,7 +679,7 @@ class Map extends MapBase
         } else {
             $maptime = time();
         }
-        $this->datestamp = strftime($this->stamptext, $maptime);
+        $this->datestamp = @strftime($this->stamptext, $maptime);
     }
 
 
@@ -1171,7 +1171,7 @@ class Map extends MapBase
             }
         }
 
-        imagedestroy($imageRef);
+        @imagedestroy($imageRef);
     }
 
     public function cleanUp()
@@ -1378,7 +1378,7 @@ class Map extends MapBase
             $note = str_replace('"', '&quot;', $note);
             $overlibhtml .= $note;
         }
-        $overlibhtml .= "',DELAY,250,${left}${above}CAPTION,'" . $caption . "');\"  onmouseout=\"return nd();\"";
+        $overlibhtml .= "',DELAY,250,{$left}{$above}CAPTION,'" . $caption . "');\"  onmouseout=\"return nd();\"";
 
         return $overlibhtml;
     }
@@ -1692,6 +1692,170 @@ class Map extends MapBase
 
 
     // This is for the entire map. asConfigData() is for the 'map' object specifically :-P
+
+    /**
+     * Export complete topology and state as an associative array.
+     *
+     * @return array
+     */
+    public function exportTopology()
+    {
+        $this->calculateDatestamp();
+
+        foreach ($this->nodes as $node) {
+            if (!$node->isTemplate()) {
+                $node->preCalculate($this);
+                $node->preRender($this);
+            }
+        }
+
+        $this->preCalculate();
+
+        $metadata = array(
+            "title" => $this->processString($this->title, $this),
+            "width" => (int) $this->width,
+            "height" => (int) $this->height,
+            "datestamp" => $this->datestamp ?: date("c"),
+            "background" => $this->background ?: "",
+        );
+
+        $nodes = array();
+        foreach ($this->nodes as $node) {
+            if ($node->isTemplate()) {
+                continue;
+            }
+
+            $label = $node->label != "" ? $this->processString($node->label, $node) : $node->name;
+
+            $targetStr = "";
+            if (!empty($node->targets)) {
+                foreach ($node->targets as $tgt) {
+                    $targetStr .= ($targetStr !== "" ? " " : "") . (is_object($tgt) && method_exists($tgt, "asConfig") ? $tgt->asConfig() : (string)$tgt);
+                }
+            }
+
+            $nodeData = array(
+                "id" => $node->name,
+                "label" => $label,
+                "raw_label" => $node->label,
+                "x" => (float) $node->x,
+                "y" => (float) $node->y,
+                "icon" => $node->iconfile ?: "",
+                "labeloffsetx" => (float) $node->labeloffsetx,
+                "labeloffsety" => (float) $node->labeloffsety,
+                "labeloffset" => $node->labeloffset ?: "",
+                "target" => $targetStr,
+                "infourl" => isset($node->infourl[IN]) ? $this->processString($node->infourl[IN], $node) : "",
+                "color" => isset($node->channelScaleColours[IN]) && is_object($node->channelScaleColours[IN])
+                    ? $node->channelScaleColours[IN]->asHTML()
+                    : null,
+                "notes" => $node->notes,
+                "hints" => $node->hints,
+                "hide_label" => !empty($node->hints['hide_label']) || !empty($node->notes['hide_label']),
+            );
+
+            $nodes[] = $nodeData;
+        }
+
+        $links = array();
+        foreach ($this->links as $link) {
+            if ($link->isTemplate()) {
+                continue;
+            }
+
+            $vias = array();
+            foreach ($link->viaList as $via) {
+                if (isset($via[2]) && isset($this->nodes[$via[2]])) {
+                    $vias[] = array($this->nodes[$via[2]]->x + $via[0], $this->nodes[$via[2]]->y + $via[1]);
+                } else {
+                    $vias[] = array($via[0], $via[1]);
+                }
+            }
+
+            $linkTargetStr = "";
+            if (!empty($link->targets)) {
+                foreach ($link->targets as $tgt) {
+                    $linkTargetStr .= ($linkTargetStr !== "" ? " " : "") . (is_object($tgt) && method_exists($tgt, "asConfig") ? $tgt->asConfig() : (string)$tgt);
+                }
+            }
+
+            $linkData = array(
+                "id" => $link->name,
+                "source" => isset($link->endpoints[0]->node) ? $link->endpoints[0]->node->name : "",
+                "target" => isset($link->endpoints[1]->node) ? $link->endpoints[1]->node->name : "",
+                "target_ds" => $linkTargetStr,
+                "bandwidth_in" => isset($link->maxValues[IN]) ? (float) $link->maxValues[IN] : 0,
+                "bandwidth_out" => isset($link->maxValues[OUT]) ? (float) $link->maxValues[OUT] : 0,
+                "bandwidth_in_cfg" => isset($link->maxValuesConfigured[IN]) ? $link->maxValuesConfigured[IN] : "",
+                "bandwidth_out_cfg" => isset($link->maxValuesConfigured[OUT]) ? $link->maxValuesConfigured[OUT] : "",
+                "in_pct" => isset($link->percentUsages[IN]) ? round((float) $link->percentUsages[IN], 2) : 0.0,
+                "out_pct" => isset($link->percentUsages[OUT]) ? round((float) $link->percentUsages[OUT], 2) : 0.0,
+                "in_bytes" => isset($link->absoluteUsages[IN]) ? (float) $link->absoluteUsages[IN] : 0.0,
+                "out_bytes" => isset($link->absoluteUsages[OUT]) ? (float) $link->absoluteUsages[OUT] : 0.0,
+                "in_color" => isset($link->colours[IN]) && is_object($link->colours[IN])
+                    ? $link->colours[IN]->asHTML()
+                    : "#c0c0c0",
+                "out_color" => isset($link->colours[OUT]) && is_object($link->colours[OUT])
+                    ? $link->colours[OUT]->asHTML()
+                    : "#c0c0c0",
+                "width" => (int) $link->width,
+                "via" => $vias,
+                "comments" => array(
+                    "in" => isset($link->comments[IN]) ? $this->processString($link->comments[IN], $link) : "",
+                    "out" => isset($link->comments[OUT]) ? $this->processString($link->comments[OUT], $link) : "",
+                ),
+                "commentpos_in" => isset($link->commentOffsets[IN]) && (int)$link->commentOffsets[IN] !== 95 ? (int)$link->commentOffsets[IN] : 75,
+                "commentpos_out" => isset($link->commentOffsets[OUT]) && (int)$link->commentOffsets[OUT] !== 5 ? (int)$link->commentOffsets[OUT] : 25,
+                "infourl" => array(
+                    "in" => isset($link->infourl[IN]) ? $this->processString($link->infourl[IN], $link) : "",
+                    "out" => isset($link->infourl[OUT]) ? $this->processString($link->infourl[OUT], $link) : "",
+                ),
+                "notes" => $link->notes,
+                "hints" => $link->hints,
+                "hide_labels" => !empty($link->hints['hide_labels']) || !empty($link->notes['hide_labels']),
+            );
+
+            $links[] = $linkData;
+        }
+
+        $scales = array();
+        foreach ($this->scales as $scaleName => $scale) {
+            $entries = array();
+            foreach ($scale->entries as $entry) {
+                $entries[] = array(
+                    "bottom" => $entry->bottom,
+                    "top" => $entry->top,
+                    "tag" => $entry->tag,
+                    "color1" => isset($entry->c1) && is_object($entry->c1) ? $entry->c1->asHTML() : null,
+                    "color2" => isset($entry->c2) && is_object($entry->c2) ? $entry->c2->asHTML() : null,
+                );
+            }
+            $scales[$scaleName] = array(
+                "name" => $scaleName,
+                "entries" => $entries,
+            );
+        }
+
+        return array(
+            "metadata" => $metadata,
+            "nodes" => $nodes,
+            "links" => $links,
+            "scales" => $scales,
+        );
+    }
+
+    /**
+     * Export complete topology and state as a JSON string.
+     *
+     * @param int $flags
+     * @return string
+     */
+    public function exportTopologyJson($flags = 448)
+    {
+        return json_encode($this->exportTopology(), $flags);
+    }
+
+
     public function getJSONConfig()
     {
         $conf = array(
@@ -1839,7 +2003,7 @@ class Map extends MapBase
 
         foreach ($permutations as $name => $items) {
             foreach ($type_perms as $description => $template) {
-                $output .= "\n# ${description} ${name}s:\n";
+                $output .= "\n# {$description} {$name}s:\n";
 
                 foreach ($items as $item) {
                     if (substr($item->name, 0, 3) != ':: ' && ($item->definedIn == $this->configfile)) {

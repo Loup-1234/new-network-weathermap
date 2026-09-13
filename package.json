@@ -1,27 +1,13 @@
 {
   "name": "network-weathermap",
   "version": "1.0.0",
-  "description": "Dummy package for weathermap to fetch jquery dependencies",
-  "main": "index.js",
-  "directories": {
-    "doc": "docs",
-    "lib": "lib"
-  },
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/howardjones/network-weathermap.git"
-  },
-  "author": "Howard Jones <howie@thingy.com>",
-  "license": "MIT",
+  "description": "Network Weathermap with modern React Flow frontend",
   "private": true,
-  "bugs": {
-    "url": "https://github.com/howardjones/network-weathermap/issues"
+  "scripts": {
+    "dev": "php -d extension=gd -S 0.0.0.0:8000 & npm --prefix ui run dev",
+    "php:serve": "php -d extension=gd -S 0.0.0.0:8000",
+    "ui:dev": "npm --prefix ui run dev",
+    "ui:build": "npm --prefix ui run build"
   },
-  "homepage": "https://github.com/howardjones/network-weathermap#readme",
-  "dependencies": {
-    "jquery": "^3.4.0"
-  }
+  "license": "MIT"
 }

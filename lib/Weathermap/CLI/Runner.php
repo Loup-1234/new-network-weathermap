@@ -25,6 +25,7 @@ class Runner
     private $configFile;
     private $imageFile = "";
     private $htmlFile = "";
+    private $jsonFile = "";
 
     public function run()
     {
@@ -100,6 +101,10 @@ class Runner
                 Option::create(null, 'image-uri', GetOpt::REQUIRED_ARGUMENT)
                     ->setArgumentName('uri')
                     ->setDescription('URI to prefix <img> tags in HTML output'),
+                Option::create(null, 'json-output', GetOpt::REQUIRED_ARGUMENT)
+                    ->setArgumentName('filename')
+                    ->setDescription('filename to write JSON topology')
+                    ->setDefaultValue(''),
             )
         );
     }
@@ -162,6 +167,7 @@ class Runner
         $this->configFile = $this->getOpt->getOption('config');
         $this->htmlFile = $this->getOpt->getOption('htmloutput');
         $this->imageFile = $this->getOpt->getOption('output');
+        $this->jsonFile = $this->getOpt->getOption('json-output') ?: $this->getOpt->getOption('dump-json') ?: '';
         $this->optionsOutput['imageuri'] = $this->getOpt->getOption('image-uri');
 
         if ($this->getOpt->getOption('bulge') === 1) {
@@ -242,9 +248,11 @@ class Runner
 
             // TODO: it would be good if this used MapRuntime (would need a stub ApplicationInterface)
 
-            if ($this->imageFile != '') {
+            if ($this->imageFile != '' && $this->imageFile != 'none' && $this->imageFile != 'null') {
                 $this->map->drawMap($this->imageFile);
                 $this->map->imagefile = $this->imageFile;
+            } else {
+                $this->map->preCalculate();
             }
 
             $this->outputHTML();
@@ -257,7 +265,11 @@ class Runner
     private function mapFileSettings()
     {
         // allow command-lines to override the config file, but provide a default if neither are present
-        $this->imageFile = $this->imageFile ?: $this->map->imageoutputfile ?: "weathermap.png";
+        if ($this->imageFile === "" && $this->jsonFile !== "" && empty($this->map->imageoutputfile)) {
+            $this->imageFile = "";
+        } else {
+            $this->imageFile = $this->imageFile ?: $this->map->imageoutputfile ?: "weathermap.png";
+        }
         $this->htmlFile = $this->htmlFile ?: $this->map->htmloutputfile ?: "";
     }
 
@@ -335,9 +347,9 @@ class Runner
             $this->map->writeConfig($this->getOpt->getOption('dump-config'));
         }
 
-        if ($this->getOpt->getOption('dump-json') != '') {
-            $fd = fopen($this->getOpt->getOption('dump-json'), "w");
-            fputs($fd, $this->map->getJSONConfig());
+        if ($this->jsonFile != '') {
+            $fd = fopen($this->jsonFile, "w");
+            fputs($fd, $this->map->exportTopologyJson());
             fclose($fd);
         }
 

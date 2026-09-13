@@ -414,11 +414,19 @@ class MapLink extends MapDataItem
         $textX = array_pop($points);
 
         if ($this->bwboxcolour->isRealColour()) {
-            imagefilledpolygon($imageRef, $points, 4, $this->bwboxcolour->gdAllocate($imageRef));
+            if (PHP_VERSION_ID >= 80000) {
+                imagefilledpolygon($imageRef, $points, $this->bwboxcolour->gdAllocate($imageRef));
+            } else {
+                imagefilledpolygon($imageRef, $points, 4, $this->bwboxcolour->gdAllocate($imageRef));
+            }
         }
 
         if ($this->bwoutlinecolour->isRealColour()) {
-            imagepolygon($imageRef, $points, 4, $this->bwoutlinecolour->gdAllocate($imageRef));
+            if (PHP_VERSION_ID >= 80000) {
+                imagepolygon($imageRef, $points, $this->bwoutlinecolour->gdAllocate($imageRef));
+            } else {
+                imagepolygon($imageRef, $points, 4, $this->bwoutlinecolour->gdAllocate($imageRef));
+            }
         }
 
         $fontObject->drawImageString(

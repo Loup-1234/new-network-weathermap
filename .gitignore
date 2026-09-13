@@ -1,3 +1,4 @@
+.run/
 # Created by .ignore support plugin (hsz.mobi)
 .idea/
 *.iml
@@ -16,7 +17,6 @@ composer.lock
 !build/phpcs.xml
 !build/network-weathermap.doxy
 vendor/*
-!vendor/jquery-fastlivefilter/jquery.fastLiveFilter.js
 node_modules/
 
 docs/src/contents.xml
@@ -70,3 +70,7 @@ dev/Vagrant/*-post-install.sql
 
 # React generated files
 cacti-resources/*/*.map
+# UI artifacts
+ui/node_modules/
+ui/dist/
+weathermap.png

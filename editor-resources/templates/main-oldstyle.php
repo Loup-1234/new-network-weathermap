@@ -34,6 +34,7 @@
 <body id="mainview">
 <div id="toolbar">
     <ul>
+        <li class="tb_active" id="tb_return_ui" style="background:#f59e0b; color:#0c0a09; font-weight:bold; cursor:pointer;" onclick="if (window.parent && window.parent !== window) { window.parent.postMessage({ type: 'CLOSE_LEGACY' }, '*'); } else { window.location.href = '/'; }">&larr; Retour<br/>Nouvelle UI</li>
         <li class="tb_active" id="tb_newfile">Change<br/>File</li>
         <li class="tb_active" id="tb_addnode">Add<br/>Node</li>
         <li class="tb_active" id="tb_addlink">Add<br/>Link</li>

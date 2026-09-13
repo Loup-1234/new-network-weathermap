@@ -33,12 +33,12 @@ class Mrtg extends Base
         if ($fd) {
             while (!feof($fd)) {
                 $buffer = fgets($fd, 4096);
-                MapUtility::debug("MRTG ReadData: Matching on '${matchvalue}in $matchperiod' and '${matchvalue}out $matchperiod'\n");
+                MapUtility::debug("MRTG ReadData: Matching on '{$matchvalue}in $matchperiod' and '{$matchvalue}out $matchperiod'\n");
 
-                if (preg_match("/<\!-- ${matchvalue}in $matchperiod ([-+]?\d+\.?\d*) -->/", $buffer, $matches)) {
+                if (preg_match("/<\!-- {$matchvalue}in $matchperiod ([-+]?\d+\.?\d*) -->/", $buffer, $matches)) {
                     $this->data[IN] = $matches[1] * 8;
                 }
-                if (preg_match("/<\!-- ${matchvalue}out $matchperiod ([-+]?\d+\.?\d*) -->/", $buffer, $matches)) {
+                if (preg_match("/<\!-- {$matchvalue}out $matchperiod ([-+]?\d+\.?\d*) -->/", $buffer, $matches)) {
                     $this->data[OUT] = $matches[1] * 8;
                 }
             }

@@ -17,7 +17,7 @@ class MapItem extends MapBase
     public $overlibwidth;
     public $overlibheight;
     public $overlibcaption;
-//    public $my_default;
+    public $my_default;
     public $definedIn;
     public $name;
     public $configOverride;    # used by the editor to allow text-editing

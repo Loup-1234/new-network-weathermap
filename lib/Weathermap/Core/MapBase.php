@@ -5,6 +5,7 @@ namespace Weathermap\Core;
 /** Links, Nodes and the Map object inherit from this class ultimately.
  * Just to make some common code common.*/
 
+#[\AllowDynamicProperties]
 class MapBase
 {
     // the source information for config fetching

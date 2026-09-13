@@ -949,6 +949,7 @@ class EditorUI extends UIBase
             $this->mapShortName = $mapFileName;
         }
 
+        if (!empty($request['embedded'])) { $fromPlugin = true; }
         $this->setEmbedded($fromPlugin);
 
         if ($mapFileName == '') {
@@ -1229,7 +1230,7 @@ class EditorUI extends UIBase
                     $realFile = $imageDirectory . DIRECTORY_SEPARATOR . $file;
                     $uri = $imageDirectory . "/" . $file;
 
-                    if (is_readable($realFile) && (preg_match('/\.(gif|jpg|png)$/i', $file))) {
+                    if (is_readable($realFile) && (preg_match('/\.(gif|jpg|png|svg)$/i', $file))) {
                         $size = getimagesize($realFile);
                         $bg = false;
                         if ($size[0] > $this->minBGImageSize && $size[1] > $this->minBGImageSize) {

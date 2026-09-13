@@ -30,7 +30,7 @@ class LinkGeometry
     protected $splitCurves; // The spines for each direction of the link
     protected $drawnCurves; // The actual list of WMPoints that will be drawn
     protected $midDistance; // The distance along to link where the split for arrowheads will be
-    protected $arrowWidths; // the size
+    protected $arrowWidths = array(IN => 0, OUT => 0); // the size
     protected $arrowPoints; // the points where an arrowhead should be started
     protected $arrowIndexes; // the index in the spines where the arrowhead takes over
     protected $midPoint; // the point where both halves meet
@@ -287,18 +287,21 @@ class LinkGeometry
             $polyline = $this->getDrawnPolygon($direction);
 
             if (!$this->fillColours[$direction]->isNone()) {
-                imagefilledpolygon(
-                    $gdImage,
-                    $polyline,
-                    count($polyline) / 2,
-                    $this->fillColours[$direction]->gdAllocate($gdImage)
-                );
+                if (PHP_VERSION_ID >= 80000) {
+                    imagefilledpolygon($gdImage, $polyline, $this->fillColours[$direction]->gdAllocate($gdImage));
+                } else {
+                    imagefilledpolygon($gdImage, $polyline, count($polyline) / 2, $this->fillColours[$direction]->gdAllocate($gdImage));
+                }
             } else {
                 MapUtility::debug("Not drawing $linkName ($direction) fill because there is no fill colour\n");
             }
 
             if (!$this->outlineColour->isNone()) {
-                imagepolygon($gdImage, $polyline, count($polyline) / 2, $this->outlineColour->gdAllocate($gdImage));
+                if (PHP_VERSION_ID >= 80000) {
+                    imagepolygon($gdImage, $polyline, $this->outlineColour->gdAllocate($gdImage));
+                } else {
+                    imagepolygon($gdImage, $polyline, count($polyline) / 2, $this->outlineColour->gdAllocate($gdImage));
+                }
             } else {
                 MapUtility::debug("Not drawing $linkName ($direction) outline because there is no outline colour\n");
             }

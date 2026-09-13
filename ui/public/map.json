@@ -1,0 +1,346 @@
+{
+    "metadata": {
+        "title": "Simple Map",
+        "width": 1920,
+        "height": 1080,
+        "datestamp": "Made: Sep 13 2026 08:25:09",
+        "background": "images/background1_950x625_197.jpg"
+    },
+    "nodes": [
+        {
+            "id": "node1",
+            "label": "Node 1",
+            "raw_label": "Node 1",
+            "x": 586,
+            "y": 207,
+            "icon": "",
+            "infourl": "",
+            "color": "#c0c0c0",
+            "notes": {
+                "inscalekey": "0_0",
+                "inscaletag": "",
+                "inscalecolor": "#c0c0c0",
+                "outscalekey": "0_0",
+                "outscaletag": "",
+                "outscalecolor": "#c0c0c0"
+            },
+            "hints": []
+        },
+        {
+            "id": "node2",
+            "label": "Node 2",
+            "raw_label": "Node 2",
+            "x": 220,
+            "y": 280,
+            "icon": "images/WorkgroupSwitch.png",
+            "infourl": "",
+            "color": "#c0c0c0",
+            "notes": {
+                "inscalekey": "0_0",
+                "inscaletag": "",
+                "inscalecolor": "#c0c0c0",
+                "outscalekey": "0_0",
+                "outscaletag": "",
+                "outscalecolor": "#c0c0c0"
+            },
+            "hints": []
+        },
+        {
+            "id": "node3",
+            "label": "Node 3",
+            "raw_label": "Node 3",
+            "x": 568,
+            "y": 96,
+            "icon": "images/Router.png",
+            "infourl": "",
+            "color": "#c0c0c0",
+            "notes": {
+                "inscalekey": "0_0",
+                "inscaletag": "",
+                "inscalecolor": "#c0c0c0",
+                "outscalekey": "0_0",
+                "outscaletag": "",
+                "outscalecolor": "#c0c0c0"
+            },
+            "hints": []
+        },
+        {
+            "id": "node02375",
+            "label": "Node11",
+            "raw_label": "Node11",
+            "x": 280,
+            "y": 400,
+            "icon": "",
+            "infourl": "",
+            "color": "#c0c0c0",
+            "notes": {
+                "inscalekey": "0_0",
+                "inscaletag": "",
+                "inscalecolor": "#c0c0c0",
+                "outscalekey": "0_0",
+                "outscaletag": "",
+                "outscalecolor": "#c0c0c0"
+            },
+            "hints": []
+        },
+        {
+            "id": "node02590",
+            "label": "Node12",
+            "raw_label": "Node12",
+            "x": 266,
+            "y": 483,
+            "icon": "",
+            "infourl": "",
+            "color": "#c0c0c0",
+            "notes": {
+                "inscalekey": "0_0",
+                "inscaletag": "",
+                "inscalecolor": "#c0c0c0",
+                "outscalekey": "0_0",
+                "outscaletag": "",
+                "outscalecolor": "#c0c0c0"
+            },
+            "hints": []
+        },
+        {
+            "id": "node02610",
+            "label": "Node13",
+            "raw_label": "Node13",
+            "x": 340,
+            "y": 540,
+            "icon": "",
+            "infourl": "",
+            "color": "#c0c0c0",
+            "notes": {
+                "inscalekey": "0_0",
+                "inscaletag": "",
+                "inscalecolor": "#c0c0c0",
+                "outscalekey": "0_0",
+                "outscaletag": "",
+                "outscalecolor": "#c0c0c0"
+            },
+            "hints": []
+        },
+        {
+            "id": "node02724",
+            "label": "box",
+            "raw_label": "box",
+            "x": 520,
+            "y": 440,
+            "icon": "box",
+            "infourl": "http://google.com/",
+            "color": "#c0c0c0",
+            "notes": {
+                "inscalekey": "0_0",
+                "inscaletag": "",
+                "inscalecolor": "#c0c0c0",
+                "outscalekey": "0_0",
+                "outscaletag": "",
+                "outscalecolor": "#c0c0c0"
+            },
+            "hints": []
+        },
+        {
+            "id": "node02875",
+            "label": "NodeWithNote",
+            "raw_label": "NodeWithNote",
+            "x": 760,
+            "y": 360,
+            "icon": "",
+            "infourl": "",
+            "color": "#c0c0c0",
+            "notes": {
+                "inscalekey": "0_0",
+                "inscaletag": "",
+                "inscalecolor": "#c0c0c0",
+                "outscalekey": "0_0",
+                "outscaletag": "",
+                "outscalecolor": "#c0c0c0"
+            },
+            "hints": []
+        }
+    ],
+    "links": [
+        {
+            "id": "node1-node2",
+            "source": "node1",
+            "target": "node2",
+            "bandwidth_in": 1000000,
+            "bandwidth_out": 1000000,
+            "bandwidth_in_cfg": "1M",
+            "bandwidth_out_cfg": "1M",
+            "in_pct": 1000,
+            "out_pct": 2000,
+            "in_bytes": 10000000,
+            "out_bytes": 20000000,
+            "in_color": "#ff0000",
+            "out_color": "#ff0000",
+            "width": 5,
+            "via": [],
+            "comments": {
+                "in": "",
+                "out": ""
+            },
+            "infourl": {
+                "in": "",
+                "out": ""
+            },
+            "notes": {
+                "inscalekey": "85_100",
+                "inscaletag": "",
+                "inscalecolor": "#ff0000",
+                "outscalekey": "85_100",
+                "outscaletag": "",
+                "outscalecolor": "#ff0000"
+            },
+            "hints": []
+        },
+        {
+            "id": "node2-node3",
+            "source": "node2",
+            "target": "node3",
+            "bandwidth_in": 2000000,
+            "bandwidth_out": 2000000,
+            "bandwidth_in_cfg": "2M",
+            "bandwidth_out_cfg": "2M",
+            "in_pct": 0,
+            "out_pct": 0,
+            "in_bytes": 0,
+            "out_bytes": 0,
+            "in_color": "#c0c0c0",
+            "out_color": "#c0c0c0",
+            "width": 5,
+            "via": [],
+            "comments": {
+                "in": "",
+                "out": ""
+            },
+            "infourl": {
+                "in": "",
+                "out": ""
+            },
+            "notes": {
+                "inscalekey": "0_0",
+                "inscaletag": "",
+                "inscalecolor": "#c0c0c0",
+                "outscalekey": "0_0",
+                "outscaletag": "",
+                "outscalecolor": "#c0c0c0"
+            },
+            "hints": []
+        },
+        {
+            "id": "node02875-node2",
+            "source": "node02875",
+            "target": "node2",
+            "bandwidth_in": 1000000,
+            "bandwidth_out": 1000000,
+            "bandwidth_in_cfg": "1M",
+            "bandwidth_out_cfg": "1M",
+            "in_pct": 0,
+            "out_pct": 0,
+            "in_bytes": 0,
+            "out_bytes": 0,
+            "in_color": "#c0c0c0",
+            "out_color": "#c0c0c0",
+            "width": 5,
+            "via": [
+                [
+                    "481",
+                    "382"
+                ]
+            ],
+            "comments": {
+                "in": "",
+                "out": ""
+            },
+            "infourl": {
+                "in": "",
+                "out": ""
+            },
+            "notes": {
+                "inscalekey": "0_0",
+                "inscaletag": "",
+                "inscalecolor": "#c0c0c0",
+                "outscalekey": "0_0",
+                "outscaletag": "",
+                "outscalecolor": "#c0c0c0"
+            },
+            "hints": []
+        }
+    ],
+    "scales": {
+        "DEFAULT": {
+            "name": "DEFAULT",
+            "entries": [
+                {
+                    "bottom": 0,
+                    "top": 0,
+                    "tag": "",
+                    "color1": "#c0c0c0",
+                    "color2": "#c0c0c0"
+                },
+                {
+                    "bottom": 0,
+                    "top": 1,
+                    "tag": "",
+                    "color1": "#ffffff",
+                    "color2": "#ffffff"
+                },
+                {
+                    "bottom": 1,
+                    "top": 10,
+                    "tag": "",
+                    "color1": "#8c00ff",
+                    "color2": "#8c00ff"
+                },
+                {
+                    "bottom": 10,
+                    "top": 25,
+                    "tag": "",
+                    "color1": "#2020ff",
+                    "color2": "#2020ff"
+                },
+                {
+                    "bottom": 25,
+                    "top": 40,
+                    "tag": "",
+                    "color1": "#00c0ff",
+                    "color2": "#00c0ff"
+                },
+                {
+                    "bottom": 40,
+                    "top": 55,
+                    "tag": "",
+                    "color1": "#00f000",
+                    "color2": "#00f000"
+                },
+                {
+                    "bottom": 55,
+                    "top": 70,
+                    "tag": "",
+                    "color1": "#f0f000",
+                    "color2": "#f0f000"
+                },
+                {
+                    "bottom": 70,
+                    "top": 85,
+                    "tag": "",
+                    "color1": "#ffc000",
+                    "color2": "#ffc000"
+                },
+                {
+                    "bottom": 85,
+                    "top": 100,
+                    "tag": "",
+                    "color1": "#ff0000",
+                    "color2": "#ff0000"
+                }
+            ]
+        },
+        "none": {
+            "name": "none",
+            "entries": []
+        }
+    }
+}

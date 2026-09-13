@@ -7,6 +7,7 @@ namespace Weathermap\Core;
  *
  * @package Weathermap\Core
  */
+#[\AllowDynamicProperties]
 class Legend extends MapItem
 {
     /** @var MapScale $scale */

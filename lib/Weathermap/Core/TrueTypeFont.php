@@ -23,7 +23,7 @@ class TrueTypeFont extends Font
 
     public function drawImageString($gdImage, $x, $y, $string, $colour, $angle = 0)
     {
-        imagettftext($gdImage, $this->size, $angle, $x, $y, $colour, $this->file, $string);
+        imagettftext($gdImage, $this->size, $angle, (int)$x, (int)$y, $colour, $this->file, $string);
     }
 
     public function getConfig($fontNumber)
